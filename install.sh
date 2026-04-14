@@ -11,11 +11,16 @@ print_modname() {
 }
 
 on_install() {
-  ui_print "- Đang cài đặt..."
-  # Lệnh này sẽ copy mọi thứ trong thư mục system của module vào máy
-  cp -r $PACKAGE/system $MODPATH/
+  ui_print "- Đang giải nén các file hệ thống..."
+  
+  # Giải nén thư mục system từ file zip vào đường dẫn module
+  unzip -o "$ZIPFILE" 'system/*' -d "$MODPATH" >&2
+  
+  # Nếu bạn có file script chạy ngầm (service.sh), giải nén nó ra luôn
+  unzip -o "$ZIPFILE" 'service.sh' -d "$MODPATH" >&2
 }
 
 set_permissions() {
+  # Cấp quyền cơ bản cho các file trong module
   set_perm_recursive $MODPATH 0 0 0755 0644
 }
